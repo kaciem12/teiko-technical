@@ -1,3 +1,63 @@
 teiko.db
 __pycache__/
 *.pyc
+"""
+frequencies.py
+
+Part 2: for every sample, compute the relative frequency of each of the
+five cell populations as a percentage of that sample's total cell count.
+
+Output columns: sample, total_count, population, count, percentage
+
+Writes the result to frequencies.csv and prints the first few rows.
+
+Run:  python frequencies.py
+"""
+
+import sqlite3
+import pandas as pd
+
+DB_PATH = "teiko.db"
+OUT_PATH = "frequencies.csv"
+
+# For each sample, first add up all five population counts to get that
+# sample's total. Then join that total back onto each individual row so
+# every population can be divided by the total for its own sample.
+QUERY = """
+WITH sample_totals AS (
+    SELECT sample, SUM(count) AS total_count
+    FROM cell_counts
+    GROUP BY sample
+)
+SELECT
+    c.sample,
+    t.total_count,
+    c.population,
+    c.count,
+    ROUND(100.0 * c.count / t.total_count, 2) AS percentage
+FROM cell_counts AS c
+JOIN sample_totals AS t
+    ON c.sample = t.sample
+ORDER BY c.sample, c.population;
+"""
+
+
+def main():
+    conn = sqlite3.connect(DB_PATH)
+    df = pd.read_sql_query(QUERY, conn)
+    conn.close()
+
+    df.to_csv(OUT_PATH, index=False)
+
+    print(df.head(10).to_string(index=False))
+    print()
+    print("%d rows written to %s" % (len(df), OUT_PATH))
+
+    # check: every sample's five percentages should add up to 100
+    sums = df.groupby("sample")["percentage"].sum()
+    print("percentage totals per sample: min %.2f, max %.2f"
+          % (sums.min(), sums.max()))
+
+
+if __name__ == "__main__":
+    main()
