@@ -1,6 +1,13 @@
 import pandas as pd
 import sqlite3
 
+# PART TWO
+
+# define a function Get Frequencies, conn is the parameter
+    # query """ holds text
+    # Each sample has 5 types of cells, so 5 counts
+        # GROUP BY sample -> gathers 5 rows into one group
+        # SUM(count) adds them
 def get_frequencies(conn):
     query = """
     WITH sample_totals AS (
@@ -17,10 +24,17 @@ def get_frequencies(conn):
     FROM cell_counts AS c
     JOIN sample_totals AS t ON c.sample = t.sample
     """
-    return pd.read_sql_query(query, conn)
 
+    #FROM cell_counts AS c & JOIN... -> Find the row in sample_totals w/ the same sample id, and attach its columns
+
+    return pd.read_sql_query(query, conn) # Pandas, take this SQL text, give me back results as a table
+
+# Only run the next few lines if the file is being run directly
 if __name__ == "__main__":
-    conn = sqlite3.connect("teiko.db")
-    result = get_frequencies(conn)
-    print(result.head())
-    print(len(result))
+    conn = sqlite3.connect("teiko.db") # open database, store connection in conn
+    result = get_frequencies(conn) # call the function, give it conn, runs, stored as result
+    print(result.head()) # Show the first 5 rows
+    print(len(result)) # Show total row count
+
+
+# PART FOUR
