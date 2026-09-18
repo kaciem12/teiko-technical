@@ -84,4 +84,4 @@ conn.commit()
 
 print(pd.read_sql("SELECT COUNT(*) FROM subjects", conn))
 print(pd.read_sql("SELECT COUNT(*) FROM samples", conn))
-print(pd.read_sql("SELECT COUNT (*) FROM cell_counts", conn))
+print(pd.read_sql("SELECT COUNT(*) FROM cell_counts", conn))
