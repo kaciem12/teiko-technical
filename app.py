@@ -6,6 +6,11 @@ from analysis import (
     get_miraclib_pbmc_cohort,
     compare_responders,
 )
+import os
+import subprocess
+
+if not os.path.exists("teiko.db"):
+    subprocess.run(["python", "load_data.py"], check=True)
 
 st.title("Immune Cell Population Analysis")
 
@@ -28,3 +33,15 @@ st.dataframe(stats_table)
 st.header("Part 4: Baseline Subset")
 st.write("Melanoma PBMC samples at baseline from miraclib-treated patients.")
 st.dataframe(baseline)
+
+st.header("Explore by Population")
+
+population = st.selectbox(
+    "Choose a cell population:",
+    sorted(merged["population"].unique()),
+)
+
+subset = merged[merged["population"] == population]
+
+st.write(f"Showing {len(subset)} samples for {population}")
+st.dataframe(subset.head(100))

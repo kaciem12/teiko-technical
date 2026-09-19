@@ -15,7 +15,6 @@ data = pd.read_csv("cell-count.csv") #Gives you a DataFrame
 
 # 3) Subjects table
 subjects = data[["age", "subject", "sex", "treatment", "response", "condition", "project"]].drop_duplicates()
-print(subjects.columns)
 print("subjects:", len(subjects))
 
 # 4) Samples table
