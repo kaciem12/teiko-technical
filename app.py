@@ -7,10 +7,11 @@ from analysis import (
     compare_responders,
 )
 import os
+import sys
 import subprocess
 
 if not os.path.exists("teiko.db"):
-    subprocess.run(["python", "load_data.py"], check=True)
+    subprocess.run([sys.executable, "load_data.py"], check=True)
 
 st.title("Immune Cell Population Analysis")
 
