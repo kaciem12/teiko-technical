@@ -29,12 +29,34 @@ def get_frequencies(conn):
 
     return pd.read_sql_query(query, conn) # Pandas, take this SQL text, give me back results as a table
 
+
+# PART FOUR
+
+# New function Get Baseline Samples, conn is parameter
+    # query holds text
+
+def get_baseline_samples(conn):
+    query = """
+    SELECT sm.sample, sm.subject, sb.project, sb.response, sb.sex
+    FROM samples AS sm
+    JOIN subjects AS sb ON sm.subject = sb.subject
+    WHERE sb.condition = 'melanoma'
+        AND sb.treatment = 'miraclib'
+        AND sm.sample_type = 'PBMC'
+        AND sm.time_from_treatment_start = 0
+    """
+    return pd.read_sql_query(query, conn)
+
+
 # Only run the next few lines if the file is being run directly
 if __name__ == "__main__":
     conn = sqlite3.connect("teiko.db") # open database, store connection in conn
     result = get_frequencies(conn) # call the function, give it conn, runs, stored as result
     print(result.head()) # Show the first 5 rows
     print(len(result)) # Show total row count
-
-
-# PART FOUR
+    baseline = get_baseline_samples(conn)
+    print(baseline.head())
+    print(len(baseline))
+    print(baseline["project"].value_counts())
+    print(baseline["response"].value_counts())
+    print(baseline["sex"].value_counts())
