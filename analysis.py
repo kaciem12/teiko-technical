@@ -32,6 +32,7 @@ def get_frequencies(conn):
 
 # PART FOUR
 
+# Question 1 : Identify all melanoma PBMC samples at baseline from patients treated with miraclib.
 # New function Get Baseline Samples, conn is parameter
     # query holds text
 
@@ -41,9 +42,9 @@ def get_baseline_samples(conn):
     FROM samples AS sm
     JOIN subjects AS sb ON sm.subject = sb.subject
     WHERE sb.condition = 'melanoma'
-        AND sb.treatment = 'miraclib'
-        AND sm.sample_type = 'PBMC'
-        AND sm.time_from_treatment_start = 0
+      AND sb.treatment = 'miraclib'
+      AND sm.sample_type = 'PBMC'
+      AND sm.time_from_treatment_start = 0
     """
     return pd.read_sql_query(query, conn)
 
